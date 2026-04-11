@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Game</title>
+<style>
+    body {
+        font-family: Arial;
+        text-align: center;
+        background: #222;
+        color: white;
+    }
+
+    h1 {
+        margin-top: 20px;
+    }
+
+    #puzzle {
+        width: 300px;
+        margin: 20px auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+    }
+
+    .tile {
+        width: 70px;
+        height: 70px;
+        background: #00aaff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    .empty {
+        background: transparent;
+        cursor: default;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    /* Credit Style */
+    .credit {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #ccc;
+    }
+
+    .credit a {
+        color: #00aaff;
+        text-decoration: none;
+    }
+
+    .credit a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+
+<h1>🧩 Puzzle Game</h1>
+<button onclick="shuffle()">Shuffle</button>
+
+<div id="puzzle"></div>
+
+<!-- CREDIT SECTION -->
+<div class="credit">
+    Created by <b>Akshay Prajapati</b> 👨‍💻 <br>
+    Follow on Instagram 👉 
+    <a href="https://instagram.com/akshay_prajapati_5_6_7" target="_blank">
+        @akshay_prajapati_5_6_7
+    </a>
+</div>
+
+<script>
+let tiles = [...Array(15).keys()].map(n => n + 1);
+tiles.push("");
+
+const puzzle = document.getElementById("puzzle");
+
+function render() {
+    puzzle.innerHTML = "";
+    tiles.forEach((num, index) => {
+        let tile = document.createElement("div");
+        tile.className = "tile";
+        if (num === "") tile.classList.add("empty");
+        tile.innerText = num;
+        tile.onclick = () => move(index);
+        puzzle.appendChild(tile);
+    });
+}
+
+function move(index) {
+    let emptyIndex = tiles.indexOf("");
+    let validMoves = [
+        index - 1,
+        index + 1,
+        index - 4,
+        index + 4
+    ];
+
+    if (validMoves.includes(emptyIndex)) {
+        [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+        render();
+        checkWin();
+    }
+}
+
+function shuffle() {
+    tiles.sort(() => Math.random() - 0.5);
+    render();
+}
+
+function checkWin() {
+    let win = tiles.slice(0,15).every((val, i) => val === i+1);
+    if (win) {
+        setTimeout(() => alert("🎉 You Win!"), 200);
+    }
+}
+
+render();
+</script>
+
+</body>
+</html>
